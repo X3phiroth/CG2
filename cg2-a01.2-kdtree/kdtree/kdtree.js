@@ -32,6 +32,8 @@ define(["kdutil", "vec2", "Scene", "KdNode", "BoundingBox"], (function (KdUtil, 
          */
         this.build = function (pointList, dim, parent, isLeft) {
 
+            console.log("Calling build function");
+
             // IMPLEMENT!
             // create new node
             var node = new KdNode(dim);
@@ -68,13 +70,13 @@ define(["kdutil", "vec2", "Scene", "KdNode", "BoundingBox"], (function (KdUtil, 
                         var ymin = parent.bbox.ymin;
                         var xmax = parent.point.center[0];
                         var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, median, dim);
+                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
                     } else /* Top BoundingBox*/ {
                         var xmin = parent.bbox.xmin;
                         var ymin = parent.point.center[1];
                         var xmax = parent.bbox.xmax;
                         var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, median, dim);
+                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
                     }
                 } else {
                     parent.rightChild = node; // Correct here?
@@ -83,34 +85,34 @@ define(["kdutil", "vec2", "Scene", "KdNode", "BoundingBox"], (function (KdUtil, 
                         var ymin = parent.bbox.ymin;
                         var xmax = parent.bbox.xmax;
                         var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, median, dim);
+                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
                     } else /* Bottom BoundingBox*/ {
                         var xmin = parent.bbox.xmin;
                         var ymin = parent.bbox.ymin;
                         var xmax = parent.bbox.xmax;
                         var ymax = parent.point.center[1] - 1; // Correct??
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, median, dim);
+                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
                     }
                 }
             }
 
             // create point list left/right and
             // call build for left/right arrays
-            var leftList;
+            var leftList = new Array();
             var leftCount = 0;
             for (var i = 0; i < median; i++) {
                 leftList[leftCount] = pointList[i];
                 leftCount++;
             }
             this.build(leftList, nextDim, node, true);
-            
-            var rightList;
+
+            var rightList = new Array();
             var rightCount = 0;
             for (var j = median + 1; i < pointList.length; j++) {
                 rightList[rightCount] = pointList[j];
                 rightCount++;
             }
-            this.build(rightList, nextDim, node, true);
+            this.build(rightList, nextDim, node, false);
 
             // return root node
             return node;
