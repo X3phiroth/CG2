@@ -7,42 +7,8 @@
 // "use strict" means that some strange JavaScript things are forbidden
 "use strict";
 
-/**
- * Outer function 
- * @param seperator string defines how points on path are seperated 
- * @returns inner function
- */
-var makePath = function(seperator){
-
-    // define a default seperator and an empty path
-    // in the execution context of the closure
-    var defaultSeperator = ", ";
-
-    // holds the current state of the path 
-    var path = "";
-
-    /**
-     * Inner function 
-     * @param point is a point on the path
-     * @returns the complete path
-     */
-    var f = function(point) {
-
-        if( point !== undefined ) {
-            // append the seperator only when path already contains
-            // a point, i.e. the sep is added as prefix to the 
-            // second/third etc point
-            // if seperator argument is undefined we use a default one
-            if(path !== "") {
-                path += seperator || defaultSeperator;
-            }
-            path += point;
-        }
-        return path;
-    };
-    return f;
-};
-
+// this shall be the function that generates a new path object
+var makePath;
 
 // the main() function is called when the HTML document is loaded
 var main = function() {
@@ -78,4 +44,3 @@ var main = function() {
 
 
 };
-

@@ -15,7 +15,7 @@ define([], (function() {
     "use strict";
 
     // start with an empty object
-    var kdutil = {};
+    var KdUtil = {};
 
 
     /**
@@ -30,7 +30,7 @@ define([], (function() {
      * @param end
      * @param left
      */
-    kdutil.visualizeKdTree = function(sceneController, scene, node, dim, start, end, left) {
+    KdUtil.visualizeKdTree = function(sceneController, scene, node, dim, start, end, left) {
 
         var style = {
             width: 1,
@@ -42,10 +42,10 @@ define([], (function() {
         sceneController.deselect();
         var nextDim = (dim === 0) ? 1 : 0;
         if (node.rightChild) {
-            kdutil.visualizeKdTree(sceneController, scene, node.rightChild, nextDim, node.point.center[dim], end, left);
+            KdUtil.visualizeKdTree(sceneController, scene, node.rightChild, nextDim, node.point.center[dim], end, left);
         }
         if (node.leftChild) {
-            kdutil.visualizeKdTree(sceneController, scene, node.leftChild, nextDim, start, node.point.center[dim], left);
+            KdUtil.visualizeKdTree(sceneController, scene, node.leftChild, nextDim, start, node.point.center[dim], left);
         }
 
     };
@@ -56,11 +56,11 @@ define([], (function() {
      * @param pointList
      * @param queryPoint
      */
-    kdutil.linearSearch = function(pointList, queryPoint) {
+    KdUtil.linearSearch = function(pointList, queryPoint) {
         var minDist = 100000;
         var minIdx = -1;
         for( var i=0; i<pointList.length; ++i) {
-            var dist = kdutil.distance(pointList[i].center, queryPoint.center);
+            var dist = KdUtil.distance(pointList[i].center, queryPoint.center);
             if( dist < minDist ) {
                 minIdx = i;
                 minDist = dist;
@@ -70,7 +70,7 @@ define([], (function() {
     };
 
 
-    kdutil.distance = function(p0, p1) {
+    KdUtil.distance = function(p0, p1) {
         return Math.sqrt( (p0[0]-p1[0])*(p0[0]-p1[0]) + (p0[1]-p1[1])*(p0[1]-p1[1]) );
     };
 
@@ -82,7 +82,7 @@ define([], (function() {
      * @param dim - current axis
      * @returns int - index in array
      */
-    kdutil.median = function(values, dim) {
+    KdUtil.median = function(values, dim) {
 
         values.sort( function(a,b) {return a.center[dim] - b.center[dim];} );
 
@@ -91,7 +91,7 @@ define([], (function() {
         return half;
     };
 
-    return kdutil;
+    return KdUtil;
 
 })); // require
 
