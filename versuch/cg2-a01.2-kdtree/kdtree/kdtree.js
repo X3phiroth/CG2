@@ -61,58 +61,52 @@ define(["kdutil", "vec2", "Scene", "KdNode", "BoundingBox"], (function (KdUtil, 
                 // which side (left/right) the node is on
                 if (isLeft) {
                     parent.leftChild = node; // Correct here?
-                    if (dim === 0) {
+                    if (dim === 1) {
                         var xmin = parent.bbox.xmin;
                         var ymin = parent.bbox.ymin;
                         var xmax = parent.point.center[0];
                         var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
-                    } else /* Top BoundingBox*/ {
-                        var xmin = parent.bbox.xmin;
-                        var ymin = parent.point.center[1];
-                        var xmax = parent.bbox.xmax;
-                        var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
-                    }
-                } else {
-                    parent.rightChild = node; // Correct here?
-                    if (dim === 0) {
-                        var xmin = parent.point.center[0]; // Correct??
-                        var ymin = parent.bbox.ymin;
-                        var xmax = parent.bbox.xmax;
-                        var ymax = parent.bbox.ymax;
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
                     } else /* Bottom BoundingBox*/ {
                         var xmin = parent.bbox.xmin;
                         var ymin = parent.bbox.ymin;
                         var xmax = parent.bbox.xmax;
                         var ymax = parent.point.center[1]; // Correct??
-                        node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
+                    }
+                } else {
+                    parent.rightChild = node; // Correct here?
+                    if (dim === 1) {
+                        var xmin = parent.point.center[0]; // Correct??
+                        var ymin = parent.bbox.ymin;
+                        var xmax = parent.bbox.xmax;
+                        var ymax = parent.bbox.ymax;
+                    } else /* Top BoundingBox*/ {
+                        var xmin = parent.bbox.xmin;
+                        var ymin = parent.point.center[1];
+                        var xmax = parent.bbox.xmax;
+                        var ymax = parent.bbox.ymax;
                     }
                 }
+                node.bbox = new BoundingBox(xmin, ymin, xmax, ymax, node.point, dim);
             }
 
             // create point list left/right and
             // call build for left/right arrays
-            var l1 = median - 1;
-            if (l1 > 0) {
-                var leftList = new Array();
-                for (var i = 0; i < median; i++) {
-                    leftList[i] = pointList[i];;
+            var leftList = [];
+            var rightList = [];
+            pointList.forEach(function(each) {
+                if (each !== node.point) {
+                    if (each.center[dim] <= node.point.center[dim]) {
+                        leftList.push(each);
+                    } else {
+                        rightList.push(each);
+                    }
                 }
-                this.build(leftList, nextDim, node, true);
+            });
+            if (leftList.length > 0) {
+                 this.build(leftList, nextDim, node, true);
             }
-            ;
-
-            var l2 = pointList.length - median;
-            if (l2 > 0) {
-                var rightList = new Array();
-                var rightCount = 0;
-                for (var j = median + 1; i < pointList.length; j++) {
-                    rightList[rightCount] = pointList[j];
-                    rightCount++;
-                }
-                this.build(rightList, nextDim, node, false);
+            if (rightList.length > 0) {
+                 this.build(rightList, nextDim, node, false);
             }
 
             // return root node

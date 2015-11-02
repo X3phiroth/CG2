@@ -26,8 +26,8 @@ define(["util", "vec2", "Scene", "PointDragger"], (function (util, vec2, Scene, 
      */
     var Point = function (center, color) {
 
-        console.log("creating a point at [" +
-                center[0] + "," + center[1] + "].");
+//        console.log("creating a point at [" +
+//                center[0] + "," + center[1] + "].");
 
         // draw style for drawing the line
         this.color = color || "#0000AA";
