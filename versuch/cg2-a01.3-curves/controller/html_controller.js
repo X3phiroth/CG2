@@ -12,7 +12,7 @@
 
 
 /* requireJS module definition */
-define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "KdUtil"], (function ($, Line, Circle, Point, KdTree, Util, KdUtil) {
+define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "kdutil", "ParametricCurve", "BezierCurve"], (function ($, Line, Circle, Point, KdTree, Util, KdUtil, ParametricCurve, BezierCurve) {
     "use strict";
 
     /*
@@ -108,58 +108,58 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "KdUtil"], (funct
             sceneController.select(point); // this will also redraw
         }));
 
-//        // public method: show parameters for selected object
-//        this.showParamsForObj = function (obj) {
-//
-//            if (!obj) {
-//                $("#radiusChange").hide();
-//                return;
-//            }
-//
-//            $("#lineWidthChange").attr("value", obj.lineStyle.width);
-//            $("colorChange").attr("value", obj.lineStyle.color);
-//            if (obj.radius === undefined) {
-//                $("#radiusChange").hide();
-//            } else {
-//                $("#radiusChange").show();
-//                $("#radiusChange").attr("value", obj.radius);
-//            }
-//            ;
-//
-//        };
-//
-//        // for all elements of class objParams
-//        $(".objParam").change((function (ev) {
-//
-//            var obj = sceneController.getSelectedObject();
-//            if (!obj) {
-//                window.console.log("ParamController: no object selected.");
-//                return;
-//            }
-//            ;
-//
-//            obj.lineStyle.width = parseInt($("#lineWidthChange").attr("value"));
-//            obj.lineStyle.color = $("colorChange").attr("value");
-//            if (obj.radius !== undefined) {
-//                obj.radius = parseInt($("#radiusChange").attr("value"));
-//            }
-//            ;
-//
-//            scene.draw(context);
-//        }));
-//
-//            Baustelle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//            
-//            $("#colorChange").change( (function() {
-//                var allObjects = sceneController.selected;
-//                var newColor = $("#colorChange").attr("value");
-//                
-//                for (that in allObjects) {
-//                    if (that instanceof Circle || that instanceof Line) {
-//                        that.strokeStyle
-//                    }
-//                }
-//            }));
+        $("#btnNewParametricCurve").click((function () {
+            // create the actual point and add it to the scene
+            var style = {
+                width: Math.floor(Math.random() * 3) + 1,
+                color: randomColor()
+            };
+            var paraCurve = new ParametricCurve("200*Math.sin(t)", "200*Math.cos(t)", 0, Math.PI, 20, style);
+            scene.addObjects([paraCurve]);
+
+            // deselect all objects, then select the newly created object
+            sceneController.deselect();
+            sceneController.select(paraCurve); // this will also redraw
+        }));
+
+        $("#btnNewBezierCurve").click((function () {
+            // create the actual point and add it to the scene
+            var style = {
+                width: Math.floor(Math.random() * 3) + 1,
+                color: randomColor()
+            };
+
+            var bezierCurve = new BezierCurve([100, 200], [250, 50], [300, 200], [250, 350], 5, 0.5, style);
+            scene.addObjects([bezierCurve]);
+
+            // deselect all objects, then select the newly created object
+            sceneController.deselect();
+            sceneController.select(bezierCurve); // this will also redraw
+        }));
+
+        $("#colorChange").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof Line || object instanceof Circle) {
+                object.lineStyle.color = $("#colorChange").val();
+            }
+            if (object instanceof Point) {
+                object.color = $("#colorChange").val();
+            }
+        });
+
+        $("#lineWidthChange").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof Line || object instanceof Circle) {
+                object.lineStyle.width = $("#lineWidthChange").val();
+            }
+        });
+
+        $("#radiusChange").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof Circle) {
+                object.radius = $("#radiusChange").val();
+            }
+        });
 
         $("#btnNewPointList").click((function () {
 
@@ -216,21 +216,92 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "KdUtil"], (funct
             // TODO: measure and compare timings of linear
             //       and kd-nearest-neighbor search
             ////////////////////////////////////////////////
-            var linearTiming;
-            var kdTiming;
-
+            var linearTiming = new Date().getMilliseconds();
             var minIdx = KdUtil.linearSearch(pointList, queryPoint);
+            linearTiming = new Date().getMilliseconds() - linearTiming;
 
             console.log("nearest neighbor linear: ", pointList[minIdx].center);
 
+            var kdTiming = new Date().getMilliseconds();
             var kdNearestNeighbor = kdTree.findNearestNeighbor(kdTree.root, queryPoint, 10000000, kdTree.root, 0);
+            kdTiming = new Date().getMilliseconds() - kdTiming;
 
             console.log("nearest neighbor kd: ", kdNearestNeighbor.point.center);
+
+            //Difference usually visible with 10k Points
+            console.log("Linear Search took     ", linearTiming, " ms.");
+            console.log("KdNearestNeighbor took ", kdTiming, " ms.");
 
             sceneController.select(pointList[minIdx]);
             sceneController.select(kdNearestNeighbor.point);
 
         }));
+
+        //init inputs
+        var update = function (obj) {
+            $("#geometrie").hide();
+            $("#curve").hide();
+            if (obj instanceof Line || obj instanceof Circle || obj instanceof Point) {
+                $("#geometrie").show();
+                $("#colorChange").show();
+                $("#lineWidthChange").hide();
+                $("#radiusChange").hide();
+
+                if (obj instanceof Line) {
+                    $("#colorChange").val(obj.lineStyle.color);
+
+                    $("#lineWidthChange").show();
+                    $("#lineWidthChange").val(obj.lineStyle.width);
+                }
+                if (obj instanceof Circle) {
+                    $("#colorChange").val(obj.lineStyle.color);
+
+                    $("#lineWidthChange").show();
+                    $("#lineWidthChange").val(obj.lineStyle.width);
+
+                    $("#radiusChange").show();
+                    $("#radiusChange").val(obj.radius);
+                }
+                if (obj instanceof Point) {
+                    $("#colorChange").val(obj.color);
+                }
+            }
+            if (obj instanceof ParametricCurve || obj instanceof BezierCurve) {
+                $("#curve").show();
+                $("#colorChangeCurve").val(obj.lineStyle.color);
+                $("#lineWidthChangeCurve").val(obj.lineStyle.width);
+
+                $("#xFunction").show();
+                $("#xFunction").val(obj.xFunction);
+
+                $("#yFunction").show();
+                $("#yFunction").val(obj.yFunction);
+
+                $("#minT").show();
+                $("#minT").val(obj.min_t);
+
+                $("#maxT").show();
+                $("#maxT").val(obj.max_t);
+
+                $("#segments").show();
+                $("#segments").val(obj.segments);
+            }
+//            $("#radiusChange").hide();
+//            $("#xFunction").hide();
+//            $("#yFunction").hide();
+//            $("#minT").hide();
+//            $("#maxT").hide();
+//            $("#segments").hide();
+        };
+        
+        $("#colorChange, #lineWidthChange, #radiusChange, #colorChangeCurve, " + 
+                "#lineWidthChangeCurve, #xFunction, #yFunction, " + 
+                "#minT, #maxT, #segments").on("change", function(){
+                    sceneController.select(sceneController.getSelectedObject());
+        });
+        
+        sceneController.onObjChange(update);
+        sceneController.onSelection(update);
     };
 
     // return the constructor function

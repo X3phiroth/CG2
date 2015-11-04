@@ -29,7 +29,7 @@ h3 {
 /* container to display editable parameters */
 #param_area {
     float:left;
-    width:200px;
+    width:250px;
     height:400px;
     border-width:1px;
     border-style: dashed;
@@ -38,6 +38,18 @@ h3 {
 }
 
 /* all input elements get a fixed width */
-input {
-    width:80px;
+input, button {
+    width:110px;
+}
+
+#geometrie, #curve {
+    display: none;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    height: 17px;
 }

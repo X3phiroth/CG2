@@ -36,7 +36,7 @@
 
 
 /* requireJS module definition */
-define(["util", "Scene", "Line", "Circle", "Point"], (function (util, Scene, Line, Circle, Point) {
+define(["util", "Scene", "Line", "Circle", "Point", "ParametricCurve", "BezierCurve"], (function (util, Scene, Line, Circle, Point, ParametricCurve, BezierCurve) {
 
     "use strict";
 
@@ -79,8 +79,7 @@ define(["util", "Scene", "Line", "Circle", "Point"], (function (util, Scene, Lin
             ev.preventDefault();
             _controller.mouseup(ev);
         }), false);
-
-
+        
         /*
          *  Register a callback function for whenever the selection changes,
          *  The callback function will be called with one parameter,
@@ -138,25 +137,8 @@ define(["util", "Scene", "Line", "Circle", "Point"], (function (util, Scene, Lin
 
             // redraw
             this.scene.draw(this.context);
-
-            // init input fields
-            $("#colorChange").show();
-            $("#lineWidthChange").show();
-            $("#radiusChange").hide();
-            if (obj instanceof Line || obj instanceof Circle) {
-                $("#colorChange").val(obj.lineStyle.color);
-                $("#lineWidthChange").val(obj.lineStyle.width);
-            }
-            if (obj instanceof Point) {
-                $("#colorChange").val(obj.color);
-            }
-            if (obj instanceof Circle) {
-                $("#radiusChange").show();
-                $("#radiusChange").val(obj.radius);
-            }
+            
         };
-
-
 
         /*
          * deselect an object by destroying its draggers and
