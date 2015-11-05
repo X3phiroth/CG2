@@ -14,8 +14,8 @@
 
 
 /* requireJS module definition */
-define(["util", "vec2", "Scene", "Point", "Line", "PointDragger"],
-        (function (util, vec2, Scene, Point, Line, PointDragger) {
+define(["util", "vec2", "Scene", "Line", "PointDragger", "ParametricCurve", "PolygonDragger"],
+        (function (util, vec2, Scene, Line, PointDragger, ParametricCurve, PolygonDragger) {
 
             "use strict";
 
@@ -28,9 +28,7 @@ define(["util", "vec2", "Scene", "Point", "Line", "PointDragger"],
              *       begin of the form { width: 2, color: "#00FF00" }
              */
 
-            var BezierCurve = function (p0, p1, p2, p3, renders, t, lineStyle) {
-
-                console.log("creating parametric curve");
+            var BezierCurve = function (p0, p1, p2, p3, segments, min_t, max_t, lineStyle) {
 
                 // draw style for drawing the line
                 this.lineStyle = lineStyle || {width: "2", color: "#0000AA"};
@@ -39,57 +37,57 @@ define(["util", "vec2", "Scene", "Point", "Line", "PointDragger"],
                 this.p1 = p1 || [250, 50];
                 this.p2 = p2 || [300, 200];
                 this.p3 = p3 || [250, 350];
-                this.renders = renders;
-                this.t = t;
-                this.points = [];
-                
-                
+                this.segments = segments || 20;
+
+                this.b0 = function (t) {
+                    return Math.pow(1 - t, 3);
+                }
+
+                this.b1 = function (t) {
+                    return 3 * Math.pow(1 - t, 2) * t;
+                }
+
+                this.b2 = function (t) {
+                    return 3 * (1 - t) * Math.pow(t, 2);
+                }
+
+                this.b3 = function (t) {
+                    return Math.pow(t, 3);
+                }
+                //function of bezier curve with the polygon points and polynoms
+                this.evaluate = function (coord, t) {
+                    return (this.b0(t) * this.p0[coord]) + 
+                            (this.b1(t) * this.p1[coord]) + 
+                            (this.b2(t) * this.p2[coord]) + 
+                            (this.b3(t) * this.p3[coord]);
+                };
+
+                this.min_t = min_t;
+                this.max_t = max_t;
+
+                this.innerCurve = new ParametricCurve(xFunction, yFunction,
+                        min_t, max_t, segments, lineStyle);
+
+                this.checkedValue = function (value) {
+                    this.innerCurve.checkedValue = value;
+                }
 
                 // draw this line into the provided 2D rendering context
                 this.draw = function (context) {
-
-                    this.calcPoints(this.p0, this.p1, this.p2, this.p3, renders)
-
-                    context.beginPath();
-
-                    // set points to be drawn
-                    context.moveTo(this.p0[0], this.p0[1]);
-                    for (var i = 0; i < this.points.length; i++) {
-                        context.lineTo(this.points[i][0], this.points[i][1]);
+                    this.points = [];
+                    this.points.push(this.p0);
+                    for (var i = 1; i <= this.segments; i++) {
+                        var t = this.min_t + (this.max_t - this.min_t) / this.segments * i;
+                        var px = this.evaluate(0, t);
+                        var py = this.evaluate(1, t);
+                        this.points.push([px, py]);
                     }
-                    context.lineTo(this.p3[0], this.p3[1]);
-
-                    // set drawing style
-                    context.lineWidth = this.lineStyle.width;
-                    context.strokeStyle = this.lineStyle.color;
-
-                    // actually start drawing
-                    context.stroke();
-                    
-                    console.log("Curve is drawn.");
-
+                    this.innerCurve.drawCurve(context, this.points, this.segment, this.marks);
                 };
 
                 // test whether the mouse position is on this line segment
                 this.isHit = function (context, pos) {
-
-                    // project point on line, get parameter of that projection point
-                    var t = vec2.projectPointOnLine(pos, this.p0, this.p1);
-
-                    // outside the line segment?
-                    if (t < 0.0 || t > 1.0) {
-                        return false;
-                    }
-
-                    // coordinates of the projected point
-                    var p = vec2.add(this.p0, vec2.mult(vec2.sub(this.p1, this.p0), t));
-
-                    // distance of the point from the line
-                    var d = vec2.length(vec2.sub(p, pos));
-
-                    // allow 2 pixels extra "sensitivity"
-                    return d <= (this.lineStyle.width / 2) + 2;
-
+                    return this.innerCurve.isHit(context, pos);
                 };
 
                 // return list of draggers to manipulate this line
@@ -129,29 +127,11 @@ define(["util", "vec2", "Scene", "Point", "Line", "PointDragger"],
                     draggers.push(new PointDragger(getP2, setP2, draggerStyle));
                     draggers.push(new PointDragger(getP3, setP3, draggerStyle));
 
+                    draggers.push(new PolygonDragger(getP0, getP1, getP2, getP3, draggerStyle));
+
                     return draggers;
 
                 };
-                
-                this.calcPoints = function(p0, p1, p2, p3, depth) {
-                    var a0 = [(1-this.t)*p0[0]+this.t*p1[0], (1-this.t)*p0[1]+this.t*p1[1]];
-                    var a1 = [(1-this.t)*p1[0]+this.t*p2[0], (1-this.t)*p1[1]+this.t*p2[1]];
-                    var a2 = [(1-this.t)*p2[0]+this.t*p3[0], (1-this.t)*p2[1]+this.t*p3[1]];
-                    
-                    var b0 = [(1-this.t)*a0[0]+this.t*a1[0], (1-this.t)*a0[1]+this.t*a1[1]];
-                    var b1 = [(1-this.t)*a1[0]+this.t*a2[0], (1-this.t)*a1[1]+this.t*a2[1]];
-                    
-                    var c0 = [(1-this.t)*b0[0]+this.t*b1[0], (1-this.t)*b0[1]+this.t*b1[1]];
-                    
-                    this.points.push(c0);
-                    
-                    if (depth > 0) {
-                        this.calcPoints(p0, a0, b0, c0, depth - 1);
-                        this.calcPoints(c0, b1, a2, p3, depth - 1);
-                    }
-                }
-
-
             };
 
             // this module only exports the constructor for StraightLine objects

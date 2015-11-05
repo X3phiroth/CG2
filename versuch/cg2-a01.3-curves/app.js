@@ -26,12 +26,16 @@ requirejs.config({
         "util" : "./utils/util",
 
         "Scene" : "./scene/scene",
+        
         "Line" : "./scene/line",
         "Circle" : "./scene/circle",
         "Point" : "./scene/point",
-        "PointDragger" : "./scene/point_dragger",
+        
         "ParametricCurve" : "./scene/parametricCurve",
         "BezierCurve" : "./scene/bezierCurve",
+        
+        "PointDragger" : "./scene/point_dragger",
+        "PolygonDragger" : "./scene/polygon_dragger",
 
         "vec2" : "./math/vec2",
 
@@ -73,10 +77,6 @@ define(["jquery", "gl-matrix", "util",
 
             console.log("document ready - starting!");
             
-            $("#colorChange").hide();
-            $("#lineWidthChange").hide();
-            $("#radiusChange").hide();
-
             // get the canvas element to be used for drawing
             var canvas=$("#drawing_area").get(0);
             if(!canvas) {

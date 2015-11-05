@@ -63,6 +63,12 @@ define(["util", "vec2", "Scene", "PointDragger"], (function (util, vec2, Scene, 
             var max = this.radius + 2;
 
             return distance <= max;
+            
+            if (distance <= max) {
+                return true;
+            } else {
+                return false;
+            }
         };
 
         // return list of draggers to manipulate this line

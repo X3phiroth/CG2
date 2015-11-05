@@ -129,7 +129,7 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "kdutil", "Parame
                 color: randomColor()
             };
 
-            var bezierCurve = new BezierCurve([100, 200], [250, 50], [300, 200], [250, 350], 5, 0.5, style);
+            var bezierCurve = new BezierCurve([100, 200], [250, 50], [400, 200], [250, 350], 20, 0, 1, style);
             scene.addObjects([bezierCurve]);
 
             // deselect all objects, then select the newly created object
@@ -158,6 +158,74 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "kdutil", "Parame
             var object = sceneController.getSelectedObject();
             if (object instanceof Circle) {
                 object.radius = $("#radiusChange").val();
+            }
+        });
+
+        $("#lineWidthChangeCurve").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve) {
+                object.lineStyle.width = $("#lineWidthChangeCurve").val();
+            }
+            if (object instanceof BezierCurve) {
+                object.lineStyle.width = $("#lineWidthChangeCurve").val();
+                object.innerCurve.lineStyle.width = $("#lineWidthChangeCurve").val();
+            }
+        });
+
+        $("#colorChangeCurve").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve) {
+                object.lineStyle.color = $("#colorChangeCurve").val();
+            }
+            if (object instanceof BezierCurve) {
+                object.lineStyle.color = $("#colorChangeCurve").val();
+                object.innerCurve.lineStyle.color = $("#colorChangeCurve").val();
+            }
+        });
+
+        $("#xFunction").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve) {
+                object.xFunction = $("#xFunction").val();
+            }
+        });
+
+        $("#yFunction").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve) {
+                object.yFunction = $("#yFunction").val();
+            }
+        });
+
+        $("#minT").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve || object instanceof BezierCurve) {
+                object.min_t = $("#minT").val();
+            }
+        });
+
+        $("#maxT").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve || object instanceof BezierCurve) {
+                object.max_t = $("#maxT").val();
+            }
+        });
+
+        $("#segments").change(function () {
+            var object = sceneController.getSelectedObject();
+            if (object instanceof ParametricCurve || object instanceof BezierCurve) {
+                object.segments = $("#segments").val();
+            }
+        });
+
+        $("#tickMarks").change(function () {
+            var object = sceneController.getSelectedObject();
+            var bool = $("#tickMarks").is(":checked");
+            if (object instanceof ParametricCurve) {
+                object.checkedValue = bool;
+            }
+            if (object instanceof BezierCurve) {
+                object.checkedValue(bool);
             }
         });
 
@@ -271,6 +339,14 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "kdutil", "Parame
                 $("#colorChangeCurve").val(obj.lineStyle.color);
                 $("#lineWidthChangeCurve").val(obj.lineStyle.width);
 
+                if (obj instanceof ParametricCurve) {
+                    $("#xFunction").prop("readonly", false);
+                    $("#yFunction").prop("readonly", false);
+                } else {
+                    $("#xFunction").prop("readonly", true);
+                    $("#yFunction").prop("readonly", true);
+                }
+
                 $("#xFunction").show();
                 $("#xFunction").val(obj.xFunction);
 
@@ -293,13 +369,13 @@ define(["jquery", "Line", "Circle", "Point", "KdTree", "util", "kdutil", "Parame
 //            $("#maxT").hide();
 //            $("#segments").hide();
         };
-        
-        $("#colorChange, #lineWidthChange, #radiusChange, #colorChangeCurve, " + 
-                "#lineWidthChangeCurve, #xFunction, #yFunction, " + 
-                "#minT, #maxT, #segments").on("change", function(){
-                    sceneController.select(sceneController.getSelectedObject());
+
+        $("#colorChange, #lineWidthChange, #radiusChange, #colorChangeCurve, " +
+                "#lineWidthChangeCurve, #xFunction, #yFunction, " +
+                "#minT, #maxT, #segments").on("change", function () {
+            sceneController.select(sceneController.getSelectedObject());
         });
-        
+
         sceneController.onObjChange(update);
         sceneController.onSelection(update);
     };
