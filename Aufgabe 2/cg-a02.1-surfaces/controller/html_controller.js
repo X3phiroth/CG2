@@ -49,6 +49,28 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric"],
                     $("#band").hide();
                     $("#ellipsoid").hide();
                     $("#parametric").show();
+                    $("#btnNewParametric").show();
+                    $("#btnNewPillow").hide();
+                    $("#btnNewCosine").hide();
+
+                }));
+                $("#btnPillow").click((function () {
+                    $("#random").hide();
+                    $("#band").hide();
+                    $("#ellipsoid").hide();
+                    $("#parametric").show();
+                    $("#btnNewParametric").hide();
+                    $("#btnNewPillow").show();
+                    $("#btnNewCosine").hide();
+                }));
+                $("#btnCosin").click((function () {
+                    $("#random").hide();
+                    $("#band").hide();
+                    $("#ellipsoid").hide();
+                    $("#parametric").show();
+                    $("#btnNewParametric").hide();
+                    $("#btnNewPillow").hide();
+                    $("#btnNewCosine").show();
                 }));
                 $("#btnNewRandom").click((function () {
 
@@ -77,16 +99,60 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric"],
                     var config = {
                         vsegments: parseInt($("#parVSegments").attr("value")),
                         usegments: parseInt($("#parUSegments").attr("value")),
-                        umin: parseInt($("#parUMin").attr("value")),
-                        umax: parseInt($("#parUMax").attr("value")),
-                        vmin: parseInt($("#parVMin").attr("value")),
-                        vmax: parseInt($("#parVMax").attr("value"))
+                        umin: parseFloat($("#parUMin").attr("value")),
+                        umax: parseFloat($("#parUMax").attr("value")),
+                        vmin: parseFloat($("#parVMin").attr("value")),
+                        vmax: parseFloat($("#parVMax").attr("value"))
 
                     };
-                    var positionFunc = function(u, v) {
+                    var positionFunc = function (u, v) {
                         return [400 * Math.sin(u) * Math.cos(v),
                             200 * Math.sin(u) * Math.sin(v),
                             100 * Math.cos(u)];
+                    };
+                    var parametric = new ParametricSurface(positionFunc, config);
+                    var bufferGeometryParametric = new BufferGeometry();
+                    bufferGeometryParametric.addAttribute("position", parametric.getPositions());
+                    bufferGeometryParametric.addAttribute("color", parametric.getColors());
+                    scene.addBufferGeometry(bufferGeometryParametric);
+                }));
+                $("#btnNewPillow").click((function () {
+
+                    var config = {
+                        vsegments: parseInt($("#parVSegments").attr("value")),
+                        usegments: parseInt($("#parUSegments").attr("value")),
+                        umin: parseFloat($("#parUMin").attr("value")),
+                        umax: parseFloat($("#parUMax").attr("value")),
+                        vmin: parseFloat($("#parVMin").attr("value")),
+                        vmax: parseFloat($("#parVMax").attr("value"))
+
+                    };
+                    var positionFunc = function (u, v) {
+                        return [300 * Math.cos(u),
+                            300 * Math.cos(v),
+                            150 * Math.sin(u) * Math.sin(v)];
+                    };
+                    var parametric = new ParametricSurface(positionFunc, config);
+                    var bufferGeometryParametric = new BufferGeometry();
+                    bufferGeometryParametric.addAttribute("position", parametric.getPositions());
+                    bufferGeometryParametric.addAttribute("color", parametric.getColors());
+                    scene.addBufferGeometry(bufferGeometryParametric);
+                }));
+                $("#btnNewCosine").click((function () {
+
+                    var config = {
+                        vsegments: parseInt($("#parVSegments").attr("value")),
+                        usegments: parseInt($("#parUSegments").attr("value")),
+                        umin: parseFloat($("#parUMin").attr("value")),
+                        umax: parseFloat($("#parUMax").attr("value")),
+                        vmin: parseFloat($("#parVMin").attr("value")),
+                        vmax: parseFloat($("#parVMax").attr("value"))
+
+                    };
+                    var positionFunc = function (u, v) {
+                        return [400 * Math.cos(u),
+                            200 * Math.cos(v),
+                            200 * Math.cos(u + v)];
                     };
                     var parametric = new ParametricSurface(positionFunc, config);
                     var bufferGeometryParametric = new BufferGeometry();

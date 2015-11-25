@@ -73,21 +73,10 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
             this.draw = function() {
 
                 requestAnimFrame( scope.draw );
-				
-				scope.animate();
+
+                scope.renderer.render(scope.scene, scope.camera);
+
             };
-			
-			/*
-			 * animate the scene
-			 */
-			this.animate = function() {
-				scope.renderer.render(scope.scene, scope.camera);
-				
-				if ($("#animate").prop("checked") === true) {
-					scope.currentMesh.rotation.y += -0.02;
-					scope.currentMesh.rotation.x += -0.03;
-				}
-			};
         };
 
 

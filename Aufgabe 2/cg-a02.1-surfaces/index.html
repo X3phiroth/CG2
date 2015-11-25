@@ -34,6 +34,9 @@
                 <button id="btnBand" type="button"   >Band</button>
                 <button id="btnEllipsoid" type="button"   >Ellipsoid</button>
                 <button id="btnParametric" type="button"   >Parametric</button>
+                <button id="btnPillow" type="button"   >Pillow</button>
+                <button id="btnCosin" type="button"   >Cosin</button>
+
 
                 <!-- add more here... -->
                 <h3>Selected Object:</h3>
@@ -66,19 +69,19 @@
                 <table id="parametric">
                     <tr>
                         <td>V-Min</td>
-                        <td><input id="parVMin" class="objParam" type="number" min="1" max="10000" value="0">
+                        <td><input id="parVMin" class="objParam" type="number" min="1" max="10000" value="-3.1415">
                     </tr>
                     <tr>
                         <td>V-Max:</td>
-                        <td><input id="parVMax" class="objParam" type="number" min="1" max="10000" value="3.15">
+                        <td><input id="parVMax" class="objParam" type="number" min="1" max="10000" value="3.1415">
                     </tr>
                     <tr>
                         <td>U-Min:</td>
-                        <td><input id="parUMin" class="objParam" type="number" min="1" max="10000" value="0">
+                        <td><input id="parUMin" class="objParam" type="number" min="1" max="10000" value="-1.5708">
                     </tr>
                     <tr>
                         <td>U-Max:</td>
-                        <td><input id="parUMax" class="objParam" type="number" min="1" max="10000" value="1.57">
+                        <td><input id="parUMax" class="objParam" type="number" min="1" max="10000" value="1.5708">
                     </tr>
                     <tr>
                         <td>V-Segments:</td>
@@ -89,11 +92,14 @@
                         <td><input id="parUSegments" class="objParam" type="number" min="1" max="10000" value="100">
                     </tr>
                     <tr>
-                        <td><button id="btnNewParametric"> Create Parametric</button></td>
+                        <td><button id="btnNewParametric"> Create Parametric</button>
+                        <button id="btnNewPillow"> Create Pillow</button>
+                        <button id="btnNewCosine"> Create Cosine</button>
+                        </td>
                         <td></td>
                     </tr>
                 </table>
-
+				Animate: <input type="checkbox" id="animate">
             </div>
 
 
