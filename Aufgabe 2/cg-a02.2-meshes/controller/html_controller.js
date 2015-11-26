@@ -115,6 +115,7 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric"],
                     var bufferGeometryParametric = new BufferGeometry();
                     bufferGeometryParametric.addAttribute("position", parametric.getPositions());
                     bufferGeometryParametric.addAttribute("color", parametric.getColors());
+                    bufferGeometryParametric.addAttribute("index", parametric.getIndices());
                     scene.addBufferGeometry(bufferGeometryParametric);
                 }));
                 $("#btnNewPillow").click((function () {
