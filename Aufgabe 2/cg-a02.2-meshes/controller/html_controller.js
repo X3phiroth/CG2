@@ -76,7 +76,7 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric"],
 
                     var numPoints = parseInt($("#numItems").attr("value"));
                     var random = new Random(numPoints);
-                    var bufferGeometryRandom = new BufferGeometry();
+                    var bufferGeometryRandom = new BufferGeometry("point");
                     bufferGeometryRandom.addAttribute("position", random.getPositions());
                     bufferGeometryRandom.addAttribute("color", random.getColors());
                     scene.addBufferGeometry(bufferGeometryRandom);
@@ -92,6 +92,7 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric"],
                     var bufferGeometryBand = new BufferGeometry();
                     bufferGeometryBand.addAttribute("position", band.getPositions());
                     bufferGeometryBand.addAttribute("color", band.getColors());
+                    bufferGeometryBand.addAttribute("index", band.getIndices());
                     scene.addBufferGeometry(bufferGeometryBand);
                 }));
                 $("#btnNewParametric").click((function () {

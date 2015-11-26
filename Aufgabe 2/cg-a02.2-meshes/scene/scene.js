@@ -9,18 +9,16 @@
  *
  */
 
-
-
 /* requireJS module definition */
 define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
-    (function(THREE, util, shaders, BufferGeometry, Random, Band) {
+    (function (THREE, util, shaders, BufferGeometry, Random, Band) {
 
         "use strict";
 
         /*
          * Scene constructor
          */
-        var Scene = function(renderer, width, height) {
+        var Scene = function (renderer, width, height) {
 
             // the scope of the object instance
             var scope = this;
@@ -28,7 +26,7 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
             scope.renderer = renderer;
             scope.t = 0.0;
 
-            scope.camera = new THREE.PerspectiveCamera( 66, width / height, 0.1, 2000 );
+            scope.camera = new THREE.PerspectiveCamera(66, width / height, 0.1, 2000);
             scope.camera.position.z = 1000;
             scope.scene = new THREE.Scene();
 
@@ -37,57 +35,57 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
             document.addEventListener("keydown", onDocumentKeyDown, false);
 
 
-            function onDocumentKeyDown(event){
+            function onDocumentKeyDown(event) {
                 // Get the key code of the pressed key
                 var keyCode = event.which;
 
-                if(keyCode == 38){
+                if (keyCode === 38) {
                     console.log("cursor up");
                     scope.currentMesh.rotation.x += 0.05;
                     // Cursor down
-                } else if(keyCode == 40){
+                } else if (keyCode === 40) {
                     console.log("cursor down");
                     scope.currentMesh.rotation.x += -0.05;
                     // Cursor left
-                } else if(keyCode == 37){
+                } else if (keyCode === 37) {
                     console.log("cursor left");
                     scope.currentMesh.rotation.y += 0.05;
                     // Cursor right
-                } else if(keyCode == 39){
+                } else if (keyCode === 39) {
                     console.log("cursor right");
                     scope.currentMesh.rotation.y += -0.05;
                     // Cursor up
                 }
             };
 
-            this.addBufferGeometry = function(bufferGeometry) {
+            this.addBufferGeometry = function (bufferGeometry) {
 
                 scope.currentMesh = bufferGeometry.getMesh();
-                scope.scene.add( scope.currentMesh );
+                scope.scene.add(scope.currentMesh);
 
-            }
+            };
 
             /*
              * drawing the scene
              */
-            this.draw = function() {
+            this.draw = function () {
 
-                requestAnimFrame( scope.draw );
-				
-				scope.animate();
+                requestAnimFrame(scope.draw);
+
+                scope.animate();
             };
-			
-			/*
-			 * animate the scene
-			 */
-			this.animate = function() {
-				scope.renderer.render(scope.scene, scope.camera);
-				
-				if ($("#animate").prop("checked") === true) {
-					scope.currentMesh.rotation.y += -0.02;
-					scope.currentMesh.rotation.x += -0.03;
-				}
-			};
+
+            /*
+             * animate the scene
+             */
+            this.animate = function () {
+                scope.renderer.render(scope.scene, scope.camera);
+
+                if ($("#animate").prop("checked") === true) {
+                    scope.currentMesh.rotation.y += -0.02;
+                    scope.currentMesh.rotation.x += -0.03;
+                }
+            };
         };
 
 
@@ -96,4 +94,4 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
 
     })); // define
 
-    
+
