@@ -4,7 +4,6 @@
  * (C)opyright Kristian Hildebrand, khildebrand@beuth-hochschule.de
  */
 
-
 /* 
  *  RequireJS alias/path configuration (http://requirejs.org/)
  */
@@ -21,6 +20,7 @@ requirejs.config({
 
         "three" : "../lib/three.min",
 
+        "vec2" : "./math/vec2",
         "scene" : "./scene/scene",
         "random" : "./models/random",
         "band" : "./models/band",
@@ -28,7 +28,8 @@ requirejs.config({
         "util"  : "./utils/util",
         "shaders" : "./shaders",
         "BufferGeometry" : "./scene/buffer_geometry",
-        "HtmlController": "./controller/html_controller"
+        "HtmlController": "./controller/html_controller",
+        "robot" : "./models/robot"
 
     },
     shim: {

@@ -34,6 +34,7 @@ define(["three"], (function (THREE) {
             this.material = new THREE.MeshBasicMaterial({
                 color: 0x000000,
                 wireframe: true
+                //side: THREE.DoubleSide
             });
         }
 

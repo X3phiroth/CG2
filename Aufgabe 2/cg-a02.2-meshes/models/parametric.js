@@ -1,4 +1,4 @@
-/*
+/**
  * JavaScript / Canvas teaching framwork
  * (C)opyright Kristian Hildebrand, khildebrand@beuth-hochschule.de
  *
@@ -13,60 +13,54 @@ define(["three"], (function (THREE) {
 
     var ParametricSurface = function (posFunc, config) {
 
-        var umin = config.umin || -Math.PI;
-        var umax = config.umax || Math.PI;
-        var vmin = config.vmin || -Math.PI;
-        var vmax = config.vmax || Math.PI;
-        var usegments = config.usegments || 20;
-        var vsegments = config.vsegments || 10;
+        var uMin = config.uMin || -Math.PI;
+        var uMax = config.uMax || Math.PI;
+        var vMin = config.vMin || -Math.PI;
+        var vMax = config.vMax || Math.PI;
+        var uSegments = config.uSegments || 20;
+        var vSegments = config.vSegments || 10;
 
-        this.posFunc = posFunc;
-
-        this.positions = new Float32Array((usegments + 1) * (vsegments + 1) * 3);
-        this.colors = new Float32Array((usegments + 1) * (vsegments + 1) * 3);
-        this.indices = new Uint32Array((usegments + 1) * (vsegments + 1) * 5);
-
-        var c = 0;
-        for (var i = 0; i <= usegments; i++) {
-            for (var j = 0; j <= vsegments; j++) {
-                this.indices[c] = i * vsegments + j;
-                this.indices[c + 1] = (i + 1) * vsegments + j;
-                this.indices[c + 2] = (i + 1) * vsegments + j + 1;
-
-                this.indices[c + 3] = i * vsegments + j;
-                this.indices[c + 4] = (i + 1) * vsegments + j + 1;
-                this.indices[c + 5] = i * vsegments + j + 1;
-
-                c += 6;
-            }
-        }
-
-
-        var umin_temp = 0;
-        var vmin_temp = 0;
-
-//                var c = 0;
-        for (var i = 0; i <= usegments; i++) {
-            umin_temp += (umax - umin) / usegments; // errechnet position u
-            vmin_temp = vmin;
-            for (var j = 0; j <= vsegments; j++) {
-                vmin_temp += (vmax - vmin) / vsegments; // errechnet position v
-                // errechnet Koordinaten, abhängig von Funktion
-                this.positions[(i * vsegments + j) * 3] = this.posFunc(umin_temp, vmin_temp)[0]; // (i * vsegments + j) * 3
-                //                       c++;
-                this.positions[(i * vsegments + j) * 3 + 1] = this.posFunc(umin_temp, vmin_temp)[1]; // (i * vsegments + j) * 3 + 1
-                //                       c++;
-                this.positions[(i * vsegments + j) * 3 + 2] = this.posFunc(umin_temp, vmin_temp)[2]; // (i * vsegments + j) * 3 + 2
-                //                       c++;
-            }
-        }
-
+        this.positions = new Float32Array((uSegments + 1) * (vSegments + 1) * 3);
+        this.colors = new Float32Array(this.positions.length);
+        this.indices = new Uint32Array(uSegments * vSegments * 6);
+        
         this.color = new THREE.Color();
         this.color.setRGB(0, 0, 1);
-        for (var k = 0; k < this.positions.length; k += 3) {
-            this.colors[k] = this.color.r;
-            this.colors[k + 1] = this.color.g;
-            this.colors[k + 2] = this.color.b;
+
+        var c = 0;
+        for (var u = 0, i = 0, c = 0; u < uSegments; u++) {
+            for (var v = 0; v < vSegments; v++) {
+                this.indices[i++] = c;
+                this.indices[i++] = c + vSegments + 2;
+                this.indices[i++] = c + 1;
+
+                this.indices[i++] = c;
+                this.indices[i++] = c + vSegments + 1;
+                this.indices[i++] = c + vSegments + 2;
+                c++;
+            }
+            c++;
+        }
+
+        var uStep = (uMax - uMin) / uSegments;
+        var vStep = (vMax - vMin) / vSegments;
+        var i = 0;
+
+        //durch die veränderte formel für die U-zuweisung wird ein Rundungsfehler vermieden
+        //nach jeder Schleife wird segmentStep neu berechnet
+        //und damit der Maxwert von u und v auch berechnet wird ist die verkürzte if-Anweisung im Schleifenkopf da
+        for (var u = uMin; u <= uMax; u += uStep) {
+            for (var v = vMin; v <= vMax; v += vStep) {
+
+                var pos = posFunc(u, v);
+
+                this.positions[i++] = pos[0];
+                this.colors[i] = this.color.r;
+                this.positions[i++] = pos[1];
+                this.colors[i] = this.color.g;
+                this.positions[i++] = pos[2];
+                this.colors[i] = this.color.b;
+            }
         }
 
         this.getPositions = function () {
@@ -82,7 +76,5 @@ define(["three"], (function (THREE) {
         };
 
     };
-
     return ParametricSurface;
 }));
-

@@ -29,8 +29,8 @@ h3 {
 /* container to display editable parameters */
 #param_area {
     float:left;
-    width:200px;
-    height:400px;
+    width:400px;
+    height:500px;
     border-width:1px;
     border-style: dashed;
     border-color: #c3c3c3;
@@ -40,4 +40,18 @@ h3 {
 /* all input elements get a fixed width */
 input {
     width:80px;
+}
+.wide {
+    width: 100%;
+}
+button {
+    width: 110px;
+}
+
+/* Table */
+#parametric {
+    width: 100%;
+}
+#parametric td {
+    width: 25%;
 }

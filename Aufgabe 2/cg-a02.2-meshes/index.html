@@ -26,24 +26,54 @@
         <!-- centered region with drawing canvas and parameter area -->
         <div align="center">
 
-            <div id="drawing_container" width="600" height="400"></div>
+            <div id="drawing_container" width="600" height="500"></div>
 
             <div id="param_area" >
 
-                <button id="btnRandom"   type="button"   >Random</button>
-                <button id="btnBand" type="button"   >Band</button>
-                <button id="btnEllipsoid" type="button"   >Ellipsoid</button>
-                <button id="btnParametric" type="button"   >Parametric</button>
-                <button id="btnPillow" type="button"   >Pillow</button>
-                <button id="btnCosin" type="button"   >Cosin</button>
-
-
-                <!-- add more here... -->
+                <table>
+                    <tr>
+                        <td><button id="btnRandom" type="button">Random</button></td>
+                        <td><button id="btnBand" type="button">Band</button></td>
+                        <td><button id="btnParametric" type="button">Parametric</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnPoints" type="button">Calc Points</button></td>
+                        <td><button id="btnRobot" type="button">Create Robot</button></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnClear" type="button">Clear Scene</button></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                Animate: <input type="checkbox" id="animate">
+                Wireframe: <input type="checkbox" id="wireframe">
                 <h3>Selected Object:</h3>
+                <table id="paraPresets">
+                    <tr>
+                        <td><button id="btnEllipsoid" type="button">Ellipsoid</button></td>
+                        <td><button id="btnPillow" type="button">Pillow</button></td>
+                        <td><button id="btnCosin" type="button">Cosin</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnSphere" type="button">Sphere</button></td>
+                        <td><button id="btnTorus" type="button">Torus</button></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnClearParametric" type="button">Clear</button></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
                 <table id="random">
                     <tr>
                         <td>Number of Items:</td>
-                        <td><input id="numItems" class="objParam" type="number" min="1" max="10000" value="1000">
+                        <td><input id="numItems" class="objParam" type="number" min="1" max="10000" value="1000000">
                     </tr>
                     <tr>
                         <td><button id="btnNewRandom"   type="button"   >Create Random</button></td>
@@ -52,59 +82,106 @@
                 <table id="band">
                     <tr>
                         <td>Number of Segments:</td>
-                        <td><input id="numSegments" class="objParam" type="number" min="1" max="10000" value="1000">
+                        <td><input id="numSegments" class="objParam" type="number" min="1" max="10000" value="100"></td>
                     </tr>
                     <tr>
                         <td>Radius:</td>
-                        <td><input id="radius" class="objParam" type="number" min="1" max="1000" value="300">
+                        <td><input id="radius" class="objParam" type="number" min="1" max="1000" value="500"></td>
                     </tr>
                     <tr>
                         <td>Height:</td>
-                        <td><input id="height" class="objParam" type="number" min="1" max="1000" value="100">
+                        <td><input id="height" class="objParam" type="number" min="1" max="1000" value="150"></td>
                     </tr>
                     <tr>
-                        <td><button id="btnNewBand"   type="button"   >Create Band</button></td>
+                        <td><button id="btnNewBand" type="button">Create Band</button></td><td></td>
                     </tr>
                 </table>
                 <table id="parametric">
                     <tr>
-                        <td>V-Min</td>
-                        <td><input id="parVMin" class="objParam" type="number" min="1" max="10000" value="-3.1415">
+                        <td>Function (x)</td>
+                        <td colspan="3"><input id="functionX" class="objParam wide" type="text"></td>
                     </tr>
                     <tr>
-                        <td>V-Max:</td>
-                        <td><input id="parVMax" class="objParam" type="number" min="1" max="10000" value="3.1415">
+                        <td>Function (y)</td>
+                        <td colspan="3"><input id="functionY" class="objParam wide" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Function (z)</td>
+                        <td colspan="3"><input id="functionZ" class="objParam wide" type="text"></td>
                     </tr>
                     <tr>
                         <td>U-Min:</td>
-                        <td><input id="parUMin" class="objParam" type="number" min="1" max="10000" value="-1.5708">
-                    </tr>
-                    <tr>
+                        <td><input id="parUMin" class="objParam wide" type="number">
                         <td>U-Max:</td>
-                        <td><input id="parUMax" class="objParam" type="number" min="1" max="10000" value="1.5708">
-                    </tr>
-                    <tr>
-                        <td>V-Segments:</td>
-                        <td><input id="parVSegments" class="objParam" type="number" min="1" max="10000" value="100">
+                        <td><input id="parUMax" class="objParam wide" type="number">
                     </tr>
                     <tr>
                         <td>U-Segments:</td>
-                        <td><input id="parUSegments" class="objParam" type="number" min="1" max="10000" value="100">
-                    </tr>
-                    <tr>
-                        <td><button id="btnNewParametric"> Create Parametric</button>
-                        <button id="btnNewPillow"> Create Pillow</button>
-                        <button id="btnNewCosine"> Create Cosine</button>
-                        </td>
+                        <td><input id="parUSegments" class="objParam wide" type="number">
+                        <td></td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td>V-Min:</td>
+                        <td><input id="parVMin" class="objParam wide" type="number">
+                        <td>V-Max:</td>
+                        <td><input id="parVMax" class="objParam wide" type="number">
+                    </tr>
+                    <tr>
+                        <td>V-Segments:</td>
+                        <td><input id="parVSegments" class="objParam wide" type="number">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewParametric"> Create</button></td>
+                        <td colspan="3"></td>
+                    </tr>
                 </table>
-				Animate: <input type="checkbox" id="animate">
+                <table id="calcPresets">
+                    <tr>
+                        <td><button id="btnCalcPreset1">Preset 1</button></td>
+                        <td><button id="btnCalcPreset2">Preset 2</button></td>
+                        <td><button id="btnCalcPreset3">Preset 3</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnCalcClear">Clear</button></td>
+                        <td></td><td></td>
+                    </tr>
+                </table>
+                <table id="calcPoints">
+                    <tr>
+                        <td>Point 1:</td>
+                        <td><input id="xp1" class="objParam" type="number" placeholder="x coord"></td>
+                        <td><input id="yp1" class="objParam" type="number" placeholder="y coord"></td>
+                        <td><input id="cRadius" class="objParam" type="number" placeholder="radius"></td>
+                    </tr>
+                    <tr>
+                        <td>Point 2:</td>
+                        <td><input id="xp2" class="objParam" type="number" placeholder="x coord"></td>
+                        <td><input id="yp2" class="objParam" type="number" placeholder="y coord"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><button id="btnCalcPoints" type="button">Calc Points</button></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>Point 3:</td>
+                        <td id="p3"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Point 4:</td>
+                        <td id="p4"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" id="hint"></td>
+                    </tr>
+                </table>
             </div>
-
-
-
         </div>
-
     </body>
 </html>
