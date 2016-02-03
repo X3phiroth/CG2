@@ -1,0 +1,223 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <!--
+         *
+         * JavaScript / WebGL teaching framwork
+         * (C)opyright Kristian Hildebrand, khildebrand@beuth-hochschule.de
+        -->
+
+        <title>CG2 A2: WebGL / Surfaces</title>
+
+        <!-- import main module using RequireJS -->
+        <script data-main="app.js" src="../lib/require.js"></script>
+
+        <!-- import style sheet -->
+        <link rel="stylesheet" type="text/css" media="screen" href="style/style.css">
+
+    </head>
+
+    <body>
+
+        <!-- this element will be used to diplay errors -->
+        <pre id="error"></pre>
+
+        <!-- centered region with drawing canvas and parameter area -->
+        <div align="center">
+
+            <div id="drawing_container" width="600" height="500"></div>
+
+            <div id="param_area" >
+
+                <table>
+                    <tr>
+                        <td><button id="btnRandom" type="button">Random</button></td>
+                        <td><button id="btnBand" type="button">Band</button></td>
+                        <td><button id="btnParametric" type="button">Parametric</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnPoints" type="button">Calc Points</button></td>
+                        <td><button id="btnRobot" type="button">Create Robot</button></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnPlanet" type="button">Planet</button></td>
+                        <td><button id="btnExplosion" type="button">Explosion</button></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnClear" type="button">Clear Scene</button></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <div><input type="checkbox" id="animate">Animate</div>
+                <div><input type="checkbox" id="wireframe">Wireframe</div>
+                <h3>Selected Object:</h3>
+                <table id="paraPresets">
+                    <tr>
+                        <td><button id="btnEllipsoid" type="button">Ellipsoid</button></td>
+                        <td><button id="btnPillow" type="button">Pillow</button></td>
+                        <td><button id="btnCosin" type="button">Cosin</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnSphere" type="button">Sphere</button></td>
+                        <td><button id="btnTorus" type="button">Torus</button></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnClearParametric" type="button">Clear</button></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <table id="random">
+                    <tr>
+                        <td>Number of Items:</td>
+                        <td><input id="numItems" class="objParam" type="number" min="1" max="10000" value="1000000">
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewRandom"   type="button"   >Create Random</button></td>
+                    </tr>
+                </table>
+                <table id="band">
+                    <tr>
+                        <td>Number of Segments:</td>
+                        <td><input id="numSegments" class="objParam" type="number" min="1" max="10000" value="100"></td>
+                    </tr>
+                    <tr>
+                        <td>Radius:</td>
+                        <td><input id="radius" class="objParam" type="number" min="1" max="1000" value="500"></td>
+                    </tr>
+                    <tr>
+                        <td>Height:</td>
+                        <td><input id="height" class="objParam" type="number" min="1" max="1000" value="150"></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewBand" type="button">Create Band</button></td><td></td>
+                    </tr>
+                </table>
+                <table id="parametric">
+                    <tr>
+                        <td>Function (x)</td>
+                        <td colspan="3"><input id="functionX" class="objParam wide" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Function (y)</td>
+                        <td colspan="3"><input id="functionY" class="objParam wide" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Function (z)</td>
+                        <td colspan="3"><input id="functionZ" class="objParam wide" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>U-Min:</td>
+                        <td><input id="parUMin" class="objParam wide" type="number">
+                        <td>U-Max:</td>
+                        <td><input id="parUMax" class="objParam wide" type="number">
+                    </tr>
+                    <tr>
+                        <td>U-Segments:</td>
+                        <td><input id="parUSegments" class="objParam wide" type="number">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>V-Min:</td>
+                        <td><input id="parVMin" class="objParam wide" type="number">
+                        <td>V-Max:</td>
+                        <td><input id="parVMax" class="objParam wide" type="number">
+                    </tr>
+                    <tr>
+                        <td>V-Segments:</td>
+                        <td><input id="parVSegments" class="objParam wide" type="number">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewParametric"> Create</button></td>
+                        <td colspan="3"></td>
+                    </tr>
+                </table>
+                <table id="calcPresets">
+                    <tr>
+                        <td><button id="btnCalcPreset1">Preset 1</button></td>
+                        <td><button id="btnCalcPreset2">Preset 2</button></td>
+                        <td><button id="btnCalcPreset3">Preset 3</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnCalcClear">Clear</button></td>
+                        <td></td><td></td>
+                    </tr>
+                </table>
+                <table id="calcPoints">
+                    <tr>
+                        <td>Point 1:</td>
+                        <td><input id="xp1" class="objParam" type="number" placeholder="x coord"></td>
+                        <td><input id="yp1" class="objParam" type="number" placeholder="y coord"></td>
+                        <td><input id="cRadius" class="objParam" type="number" placeholder="radius"></td>
+                    </tr>
+                    <tr>
+                        <td>Point 2:</td>
+                        <td><input id="xp2" class="objParam" type="number" placeholder="x coord"></td>
+                        <td><input id="yp2" class="objParam" type="number" placeholder="y coord"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><button id="btnCalcPoints" type="button">Calc Points</button></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>Point 3:</td>
+                        <td id="p3"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Point 4:</td>
+                        <td id="p4"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" id="hint"></td>
+                    </tr>
+                </table>
+                <table id="planet">
+                    <tr>
+                        <td><input type="checkbox" checked id="showDay"> Show Day Texture</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" checked id="showNight"> Show Night Texture</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" checked id="showClouds"> Show Clouds Texture</td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewPlanet" type="button">New Planet</button></td>
+                    </tr>
+                </table>
+                <table id="explosion">
+                    <tr>
+                        <td><input id="explosionSpeed" type="number" min="1" max="50" step="1" value="15"> Speed </td><td> (1-50, Step: 1)</td>
+                    </tr>
+                    <tr>
+                        <td><input id="explosionColor" type="number" min="5" max="50" step="1" value="15"> Color </td><td>(5-50, Step: 1)</td>
+                    </tr>
+                    <tr>
+                        <td><input id="explosionFrequency" type="number" min="0.5" max="5.0" step="0.1" value="1.0"> Frequency </td><td> (0.5-5.0, Step: 0.1)</td>
+                    </tr>
+                    <tr>
+                        <td><input id="explosionWeight" type="number" min="50" max="250" step="1" value="150"> Weight </td><td> (50-250, Step: 1)</td>
+                    </tr>
+                    <tr>
+                        <td><button id="btnNewExplosion" type="button">New Explosion</button> </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
