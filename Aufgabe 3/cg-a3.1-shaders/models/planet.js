@@ -26,10 +26,10 @@ define(["three", "shaders"],
                 uniforms: THREE.UniformsUtils.merge([
                     THREE.UniformsLib["lights"],
                     {
-                        materialPhongDiffuse: {type: 'c', value: new THREE.Color(1, 1, 1)},
-                        materialPhongSpecular: {type: 'c', value: new THREE.Color(0.7, 0.7, 0.7)},
-                        materialPhongAmbient: {type: 'c', value: new THREE.Color(0.8, 0.2, 0.2)},
-                        materialPhongShining: {type: 'f', value: 16.0},
+                        materialPhongDiffuse: {type: 'c', value: new THREE.Color(1, 0, 0)},
+                        materialPhongSpecular: {type: 'c', value: new THREE.Color(1, 1, 1)},
+                        materialPhongAmbient: {type: 'c', value: new THREE.Color(0, 0, 1)},
+                        materialPhongShining: {type: 'f', value: 32.0},
                         textureDay : {type: 't', value: null},
                         textureNight: {type: 't', value: null},
                         textureClouds: {type: 't', value: null},
@@ -44,7 +44,7 @@ define(["three", "shaders"],
             });
 
             // Erstellung des Skeletts
-            var skeleton = new THREE.SphereGeometry(400, 100, 100);
+            var skeleton = new THREE.SphereGeometry(500, 300, 300);
 
             // Laden der Texturen
             loader.load("./textures/earth_month04.jpg", function(tex) {

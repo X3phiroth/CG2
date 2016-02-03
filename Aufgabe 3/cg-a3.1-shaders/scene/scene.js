@@ -182,6 +182,7 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
                     if ($("#animate").prop("checked")) {
                         var robotHead = scope.scene.getObjectByName("neck", true);
                         var planet = scope.scene.getObjectByName("planet", true);
+                        var explosion = scope.scene.getObjectByName("explosion", true);
                         if (robotHead) {
                             var robotLeftArm = scope.scene.getObjectByName("jointLeftArm", true);
                             var robotRightArm = scope.scene.getObjectByName("jointRightArm", true);
@@ -214,6 +215,8 @@ define(["three", "util", "shaders", "BufferGeometry", "random", "band"],
                             sun.position.z = Math.cos(scope.runningZSun);
                             scope.runningZSun -= 0.008;
                             scope.currentMesh.rotation.y += 0.0025;
+                        } else if (explosion) {
+                        //    Do nothing here...
                         } else {
                             scope.currentMesh.rotation.y += 0.0025;
                             scope.currentMesh.rotation.x += 0.0020;

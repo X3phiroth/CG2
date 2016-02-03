@@ -307,6 +307,21 @@ define(["jquery", "BufferGeometry", "random", "band", "parametric", "three", "ve
                 $("#btnNewExplosion").click(function() {
                     var explosion = new Explosion();
 
+                    $("#explosionTexture").change(function() {
+                        var loader = new THREE.TextureLoader();
+                        if ($("#explosionTexture").is(":checked")) {
+                            loader.load("./textures/blue-explosion.jpg", function(tex){
+                                explosion.material.uniforms.explosionTex.value = tex;
+                            });
+                        } else {
+                            loader.load("./textures/explosion.png", function(tex){
+                                explosion.material.uniforms.explosionTex.value = tex;
+                            });
+                        }
+
+
+                    });
+
                     scene.addMesh(explosion.getMesh());
                 });
 

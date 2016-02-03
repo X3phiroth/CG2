@@ -38,7 +38,7 @@ define(["jquery", "three", "shaders"],
             // Parametereinstellung & Animation
             setInterval(function () {
                 var speed = $("#explosionSpeed").val();
-                scope.material.uniforms['time'].value = 0.00001 * speed * ( Date.now() - start);
+                scope.material.uniforms['time'].value = 0.00001 * speed * (Date.now() - start);
                 var color = $("#explosionColor").val();
                 scope.material.uniforms['colorScale'].value = color;
                 var frequency = $("#explosionFrequency").val();
@@ -51,7 +51,7 @@ define(["jquery", "three", "shaders"],
                 scope.material.uniforms.explosionTex.value = tex;
             });
 
-            scope.mesh = new THREE.Mesh(new THREE.SphereGeometry( 400, 220, 220), scope.material);
+            scope.mesh = new THREE.Mesh(new THREE.SphereGeometry( 500, 220, 220), scope.material);
             scope.mesh.name = "explosion";
             scope.root.add(scope.mesh);
 
